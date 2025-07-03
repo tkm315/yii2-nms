@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -26,28 +27,42 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+   public function behaviors()
+{
+    return [
+        'access' => [
+            'class' => AccessControl::class,
+            'only' => ['logout', 'add-device'],
+            'rules' => [
+                [
+                    'actions' => ['logout'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+                [
+                    'actions' => ['add-device'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                    'matchCallback' => function ($rule, $action) {
+                        if (Yii::$app->user->identity->username === 'admin') {
+                            return true;
+                        }
+                        Yii::$app->session->setFlash('error', 'Just admins can add device.');
+                        Yii::$app->response->redirect(['site/index'])->send();
+                        Yii::$app->end();
+                    },
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+        ],
+        'verbs' => [
+            'class' => VerbFilter::class,
+            'actions' => [
+                'logout' => ['post'],
             ],
-        ];
-    }
+        ],
+    ];
+}
+
 
     /**
      * {@inheritdoc}
@@ -81,35 +96,33 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-  public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+public function actionLogin()
+{
+    if (!Yii::$app->user->isGuest) {
+        return $this->goHome();
     }
+
+    $model = new LoginForm();
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        return $this->goBack();
+    }
+
+    return $this->render('login', [
+        'model' => $model,
+    ]);
+}
 
     /**
      * Logout action.
      *
      * @return Response
      */
- /*   public function actionLogout()
-    {
-        Yii::$app->user->logout();
+public function actionLogout()
+{
+    Yii::$app->user->logout();
+    return $this->goHome();
+}
 
-        return $this->goHome();
-    }
-*/
     /**
      * Displays contact page.
      *

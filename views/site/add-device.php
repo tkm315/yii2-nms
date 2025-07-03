@@ -2,7 +2,11 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+/* @var $this yii\web\View */
+/* @var $model app\models\Device */
+
 $this->title = 'Add Device';
+
 ?>
 
 <h1><?= Html::encode($this->title) ?></h1>
@@ -17,6 +21,13 @@ $this->title = 'Add Device';
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'status')->dropDownList([
+    '' => 'Status (choose please)',
+    'online' => 'Online',
+    'offline' => 'Offline',
+    'unknown' => 'Unknown',
+]) ?>
 
 <div class="form-group">
     <?= Html::submitButton('Add Device', ['class' => 'btn btn-success']) ?>

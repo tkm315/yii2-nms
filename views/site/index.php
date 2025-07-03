@@ -1,10 +1,17 @@
+
 <?php
+use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 
 $this->title = 'My Yii Application';
 ?>
-<?= \yii\helpers\Html::a('Add Device', ['site/add-device'], ['class' => 'btn btn-success']) ?>
+
+<p>
+    <?= Html::a('Add Device', ['site/add-device'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('Status Monitoring', ['site/status-monitoring'], ['class' => 'btn btn-info']) ?>
+</p>
+
 
 <!--
 <div class="site-index">

@@ -16,6 +16,7 @@ class Device extends ActiveRecord
         return [
             [['name'], 'required'],
             [['name'], 'string', 'max' => 255],
+            [['status'], 'string'],
         ];
     }
 }

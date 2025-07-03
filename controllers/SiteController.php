@@ -85,6 +85,39 @@ class SiteController extends Controller
      *
      * @return string
      */
+
+    public function actionStatusMonitoring()
+    {
+    $devices = Device::find()->all();
+    //show the status in order(online , offline , unknown)
+    usort($devices, function($a, $b) {
+    $order = ['online' => 0, 'offline' => 1, 'unknown' => 2];
+        return $order[$a->status] <=> $order[$b->status];
+            });
+
+// count the devices
+    $statusCounts = [
+        'online' => 0,
+        'offline' => 0,
+        'unknown' => 0,
+    ];
+
+    foreach ($devices as $device) {
+        if ($device->status === 'online') {
+            $statusCounts['online']++;
+        } elseif ($device->status === 'offline') {
+            $statusCounts['offline']++;
+        } else {
+            $statusCounts['unknown']++;
+        }
+    }
+
+        return $this->render('status-monitoring', [
+            'devices' => $devices,
+            'statusCounts' => $statusCounts,
+         ]);
+    }
+
    public function actionIndex()
     {
         return $this->render('index');

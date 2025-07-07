@@ -9,6 +9,7 @@ $this->title = 'My Yii Application';
 
 <p>
     <?= Html::a('Add Device', ['site/add-device'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('View Devices', ['site/view-devices'], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('Status Monitoring', ['site/status-monitoring'], ['class' => 'btn btn-info']) ?>
 </p>
 

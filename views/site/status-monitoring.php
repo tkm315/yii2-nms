@@ -5,14 +5,12 @@ $this->title = 'Status Monitoring';
 ?>
 
 <h1>Status Monitoring</h1>
-<!--show total -->
+
 <h3>Device Status Overview</h3>
 <ul>
     <li>Online Devices: <?= $statusCounts['online'] ?></li>
     <li>Offline Devices: <?= $statusCounts['offline'] ?></li>
-    
 </ul>
-
 
 <style>
     table {
@@ -26,6 +24,22 @@ $this->title = 'Status Monitoring';
         padding: 8px;
         text-align: left;
     }
+
+    .online-row {
+        background-color: #a8d5b8;
+    }
+
+    .offline-row {
+        background-color: #f5b5b8;
+    }
+
+    .device-details {
+        background-color: #f8f9fa;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #cccccc;
+        display: none;
+    }
 </style>
 
 <table>
@@ -33,23 +47,43 @@ $this->title = 'Status Monitoring';
         <tr>
             <th>Device Name</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($devices as $device): ?>
-            <?php
-                $color = '';
-                if ($device->status === 'online') {
-                    $color = '#a8d5b8'; // سبز پررنگ‌تر
-                } else {
-                    $color = '#f5b5b8'; // طوسی پررنگ‌تر
-                }
-            ?>
-            <tr style="background-color: <?= $color ?>;">
-                <td><?= htmlspecialchars($device->name) ?></td>
-                <td><?= htmlspecialchars($device->status === 'online' ? 'online' : 'offline') ?></td>
+            <?php $rowClass = $device->status === 'online' ? 'online-row' : 'offline-row'; ?>
+            <tr class="<?= $rowClass ?>">
+                <td><?= Html::encode($device->name) ?></td>
+                <td><?= Html::encode($device->status) ?></td>
+                <td>
+                    <button onclick="toggleDetails('details-<?= $device->id ?>')">
+                        Details
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div id="details-<?= $device->id ?>" class="device-details">
+                        <strong>Device Details:</strong><br>
+                        Name: <?= Html::encode($device->name) ?><br>
+                        IP Address: <?= Html::encode($device->ip_address) ?><br>
+                        Device Type: <?= Html::encode($device->device_type) ?><br>
+                        Status: <?= Html::encode($device->status) ?><br>
+                    </div>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
+<script>
+    function toggleDetails(id) {
+        var div = document.getElementById(id);
+        if (div.style.display === "none" || div.style.display === "") {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+</script>

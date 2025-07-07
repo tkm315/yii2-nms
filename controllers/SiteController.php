@@ -99,7 +99,6 @@ class SiteController extends Controller
     $statusCounts = [
         'online' => 0,
         'offline' => 0,
-        
     ];
 
     foreach ($devices as $device) {
@@ -116,6 +115,57 @@ class SiteController extends Controller
             'statusCounts' => $statusCounts,
          ]);
     }
+
+public function actionViewDevices()
+{
+    $devices = Device::find()->all();
+
+    return $this->render('view-devices', [
+        'devices' => $devices
+    ]);
+}
+
+public function actionUpdateDevice()
+{
+    if (Yii::$app->user->isGuest || Yii::$app->user->identity->username !== 'admin') {
+        throw new \yii\web\ForbiddenHttpException("Just admin can edit");
+    }
+
+    $id = Yii::$app->request->post('id');
+    $device = Device::findOne($id);
+
+    if (!$device) {
+        throw new \yii\web\NotFoundHttpException("Device not found.");
+    }
+
+    $device->name = Yii::$app->request->post('name');
+    $device->ip_address = Yii::$app->request->post('ip_address');
+    $device->device_type = Yii::$app->request->post('device_type');
+
+    if ($device->save()) {
+        return $this->redirect(['site/view-devices']);
+    } else {
+        return $this->render('view-devices', [
+            'devices' => Device::find()->all(),
+            'error' => 'Failed to save changes.',
+        ]);
+    }
+}
+
+public function actionDeleteDevice()
+{
+    $request = Yii::$app->request;
+    if ($request->isPost && !Yii::$app->user->isGuest && Yii::$app->user->identity->username === 'admin') {
+        $id = $request->post('id');
+        $device = Device::findOne($id);
+        if ($device !== null) {
+            $device->delete();
+        }
+    }
+    return $this->redirect(['site/view-devices']);
+}
+
+
 
    public function actionIndex()
     {

@@ -20,14 +20,25 @@ $this->title = 'Add Device';
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+<?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Enter device name']) ?>
+
+<?= $form->field($model, 'ip_address')->textInput(['maxlength' => true, 'placeholder' => 'e.g., 192.168.1.1']) ?>
+
+<?= $form->field($model, 'device_type')->dropDownList([
+    '' => 'Select Device Type',
+    'Router' => 'Router',
+    'Switch' => 'Switch',
+    'Firewall' => 'Firewall',
+    'Server' => 'Server',
+    'Access Point' => 'Access Point',
+], ['prompt' => 'Choose device type...']) ?>
 
 <?= $form->field($model, 'status')->dropDownList([
-    '' => 'Status (choose please)',
+    '' => 'Select Status',
     'online' => 'Online',
     'offline' => 'Offline',
     'unknown' => 'Unknown',
-]) ?>
+], ['prompt' => 'Choose status...']) ?>
 
 <div class="form-group">
     <?= Html::submitButton('Add Device', ['class' => 'btn btn-success']) ?>

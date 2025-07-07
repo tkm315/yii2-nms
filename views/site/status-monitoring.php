@@ -10,7 +10,6 @@ $this->title = 'Status Monitoring';
 <ul>
     <li>Online Devices: <?= $statusCounts['online'] ?></li>
     <li>Offline Devices: <?= $statusCounts['offline'] ?></li>
-    <li>Unknown Devices: <?= $statusCounts['unknown'] ?></li>
 </ul>
 
 
@@ -41,15 +40,14 @@ $this->title = 'Status Monitoring';
                 $color = '';
                 if ($device->status === 'online') {
                     $color = '#a8d5b8'; // سبز پررنگ‌تر
-                } elseif ($device->status === 'offline') {
-                    $color = '#f5b5b8'; // قرمز پررنگ‌تر
                 } else {
-                    $color = '#d6d8db'; // طوسی پررنگ‌تر
+                    // Treat any non-online status as offline
+                    $color = '#f5b5b8'; // قرمز پررنگ‌تر
                 }
             ?>
             <tr style="background-color: <?= $color ?>;">
                 <td><?= htmlspecialchars($device->name) ?></td>
-                <td><?= htmlspecialchars($device->status) ?></td>
+                <td><?= htmlspecialchars($device->status === 'online' ? 'online' : 'offline') ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

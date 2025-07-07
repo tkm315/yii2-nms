@@ -12,7 +12,7 @@ class m250703_142559_add_status_column_to_device_table extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('device', 'status', $this->string()->defaultValue('unknown'));
+        $this->addColumn('device', 'status', $this->string()->defaultValue('offline'));
     }
 
     /**

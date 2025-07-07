@@ -26,7 +26,6 @@ $this->title = 'Add Device';
     '' => 'Status (choose please)',
     'online' => 'Online',
     'offline' => 'Offline',
-    'unknown' => 'Unknown',
 ]) ?>
 
 <div class="form-group">

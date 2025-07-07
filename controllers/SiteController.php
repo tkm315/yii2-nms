@@ -89,9 +89,9 @@ class SiteController extends Controller
     public function actionStatusMonitoring()
     {
     $devices = Device::find()->all();
-    //show the status in order(online , offline , unknown)
+    //show the status in order(online, offline)
     usort($devices, function($a, $b) {
-    $order = ['online' => 0, 'offline' => 1, 'unknown' => 2];
+    $order = ['online' => 0, 'offline' => 1];
         return $order[$a->status] <=> $order[$b->status];
             });
 
@@ -99,16 +99,14 @@ class SiteController extends Controller
     $statusCounts = [
         'online' => 0,
         'offline' => 0,
-        'unknown' => 0,
     ];
 
     foreach ($devices as $device) {
         if ($device->status === 'online') {
             $statusCounts['online']++;
-        } elseif ($device->status === 'offline') {
-            $statusCounts['offline']++;
         } else {
-            $statusCounts['unknown']++;
+            // Treat any non-online status (including 'unknown') as offline
+            $statusCounts['offline']++;
         }
     }
 
